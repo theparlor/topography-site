@@ -144,6 +144,191 @@
   </div>
 </div></section>
 
+<section id="diagrams">
+<style>
+  #diagrams .diag-pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:32px}
+  #diagrams .diag-block{background:var(--ground-2);border:1px solid var(--line);border-radius:12px;padding:22px 20px 18px}
+  #diagrams .diag-label{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:12px;font-family:'Spectral'}
+  @media(max-width:760px){#diagrams .diag-pair{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+  <div class="kicker">How it comes to be &middot; where it lives</div>
+  <h2>Two views of the planning engine.</h2>
+  <p class="body">The first diagram traces how a single Topography run unfolds — plan fragments collected from sessions feed a unified plan-state, which produces a coherence score and a sealed handoff record at the COMPACT boundary. The second shows where Topography sits in the portfolio: the products it reads, what it produces, and the Intent governance loop drawn behind it as a faint veil.</p>
+
+  <div class="diag-pair">
+
+    <!-- DIAGRAM 1: FLOW — How it comes to be -->
+    <div class="diag-block">
+      <div class="diag-label">How it comes to be</div>
+      <svg viewBox="0 0 480 310" width="100%" height="auto" style="max-width:480px;display:block" xmlns="http://www.w3.org/2000/svg" aria-label="Flow diagram: how a Topography run works">
+        <defs>
+          <linearGradient id="tg-flow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#E8772B"/>
+            <stop offset="100%" stop-color="#7E8A98"/>
+          </linearGradient>
+          <linearGradient id="tg-score" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C9A45C"/>
+            <stop offset="100%" stop-color="#9A7F4E"/>
+          </linearGradient>
+          <marker id="tarr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#C9A45C" opacity="0.75"/>
+          </marker>
+          <marker id="tarr-steel" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#7E8A98" opacity="0.75"/>
+          </marker>
+          <marker id="tarr-out" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#E8772B" opacity="0.8"/>
+          </marker>
+        </defs>
+
+        <!-- Sources: three plan fragments stacked -->
+        <rect x="8" y="78" width="80" height="28" rx="6" fill="#211a13" stroke="#E8772B" stroke-width="1.2"/>
+        <text x="48" y="95" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#F2A24A">session A</text>
+
+        <rect x="8" y="112" width="80" height="28" rx="6" fill="#211a13" stroke="#E8772B" stroke-width="1.5"/>
+        <text x="48" y="129" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#F2A24A">session B</text>
+
+        <rect x="8" y="146" width="80" height="28" rx="6" fill="#211a13" stroke="#E8772B" stroke-width="1.2"/>
+        <text x="48" y="163" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#F2A24A">session C</text>
+
+        <!-- bracket label: plan fragments -->
+        <text x="48" y="70" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#9A7F4E" font-style="italic">plan fragments</text>
+
+        <!-- Arrows from fragments → unified plan-state -->
+        <line x1="88" y1="92" x2="138" y2="120" stroke="#E8772B" stroke-width="1" stroke-opacity="0.7" marker-end="url(#tarr)"/>
+        <line x1="88" y1="126" x2="138" y2="126" stroke="#E8772B" stroke-width="1" stroke-opacity="0.9" marker-end="url(#tarr)"/>
+        <line x1="88" y1="160" x2="138" y2="132" stroke="#E8772B" stroke-width="1" stroke-opacity="0.7" marker-end="url(#tarr)"/>
+
+        <!-- Node 2: Unified plan-state -->
+        <rect x="140" y="108" width="88" height="40" rx="7" fill="#2b2219" stroke="#C9A45C" stroke-width="1.4"/>
+        <text x="184" y="124" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="9" fill="#ECE3D4">unified</text>
+        <text x="184" y="136" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="9" fill="#ECE3D4">plan-state</text>
+
+        <!-- Arrow plan-state → score -->
+        <line x1="228" y1="128" x2="248" y2="128" stroke="#C9A45C" stroke-width="1.4" marker-end="url(#tarr)"/>
+
+        <!-- Node 3: Coherence score -->
+        <rect x="250" y="108" width="88" height="40" rx="7" fill="#2b2219" stroke="#C9A45C" stroke-width="1.2"/>
+        <text x="294" y="124" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="9" fill="#ECE3D4">coherence</text>
+        <text x="294" y="136" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="9" fill="#ECE3D4">score</text>
+
+        <!-- Score value badge -->
+        <rect x="264" y="152" width="60" height="14" rx="4" fill="rgba(201,164,92,0.12)" stroke="#9A7F4E" stroke-width="0.8"/>
+        <text x="294" y="162" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7" fill="#C9A45C">0.0 – 1.0</text>
+
+        <!-- Arrow score → split fork for two outputs -->
+        <line x1="338" y1="128" x2="356" y2="128" stroke="#C9A45C" stroke-width="1.4"/>
+        <line x1="356" y1="128" x2="356" y2="90" stroke="#7E8A98" stroke-width="1" stroke-opacity="0.7"/>
+        <line x1="356" y1="128" x2="356" y2="166" stroke="#E8772B" stroke-width="1" stroke-opacity="0.7"/>
+
+        <!-- Output A: active-work view -->
+        <line x1="356" y1="90" x2="372" y2="90" stroke="#7E8A98" stroke-width="1.2" marker-end="url(#tarr-steel)"/>
+        <rect x="374" y="74" width="96" height="32" rx="6" fill="#17120e" stroke="#5B6573" stroke-width="1.2"/>
+        <text x="422" y="87" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#AAB4C0">active-work</text>
+        <text x="422" y="98" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#AAB4C0">view (active)</text>
+
+        <!-- Output B: handoff record -->
+        <line x1="356" y1="166" x2="372" y2="166" stroke="#E8772B" stroke-width="1.2" marker-end="url(#tarr-out)"/>
+        <rect x="374" y="150" width="96" height="32" rx="6" fill="#17120e" stroke="#E8772B" stroke-width="1.2"/>
+        <text x="422" y="163" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#F2A24A">handoff record</text>
+        <text x="422" y="174" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#F2A24A">(COMPACT seal)</text>
+
+        <!-- COMPACT badge -->
+        <rect x="380" y="187" width="84" height="14" rx="4" fill="rgba(232,119,43,0.12)" stroke="#9A7F4E" stroke-width="0.8"/>
+        <text x="422" y="197" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7" fill="#C9A45C">sealed at boundary</text>
+
+        <!-- Bottom label -->
+        <text x="240" y="284" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#85795F">Fragments &rarr; Plan-state &rarr; Score &rarr; Active view + Handoff record</text>
+      </svg>
+    </div>
+
+    <!-- DIAGRAM 2: ARCHITECTURE — Where it lives -->
+    <div class="diag-block">
+      <div class="diag-label">Where it lives</div>
+      <svg viewBox="0 0 480 310" width="100%" height="auto" style="max-width:480px;display:block" xmlns="http://www.w3.org/2000/svg" aria-label="Architecture diagram: Topography position in the portfolio">
+        <defs>
+          <linearGradient id="ag-topo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#E8772B" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#2b2219" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="ag-loom" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7E8A98" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#211a13" stop-opacity="0.8"/>
+          </linearGradient>
+          <marker id="aarr-t" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#C9A45C" opacity="0.8"/>
+          </marker>
+          <marker id="aarr-t-out" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#E8772B" opacity="0.8"/>
+          </marker>
+          <marker id="aarr-t-steel" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#7E8A98" opacity="0.75"/>
+          </marker>
+        </defs>
+
+        <!-- Intent loop veil — faint background rectangle -->
+        <rect x="10" y="14" width="460" height="254" rx="12" fill="none" stroke="#3a2f23" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="26" y="28" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#3a2f23" font-style="italic">Intent loop — Notice · Spec · Execute · Observe</text>
+
+        <!-- Loom box — left (Awareness position) -->
+        <rect x="24" y="90" width="100" height="118" rx="10" fill="url(#ag-loom)" stroke="#7E8A98" stroke-width="1.3"/>
+        <text x="74" y="112" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-size="13" font-weight="700" fill="#AAB4C0">Loom</text>
+        <line x1="44" y1="120" x2="104" y2="120" stroke="#3a2f23" stroke-width="0.8"/>
+        <text x="74" y="135" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#B3A890">cross-session</text>
+        <text x="74" y="148" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#B3A890">coordination</text>
+        <text x="74" y="161" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#B3A890">selvedge</text>
+        <!-- awareness label -->
+        <text x="74" y="196" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#85795F" font-style="italic">Awareness position</text>
+
+        <!-- Topography box — centre (Planning position) -->
+        <rect x="172" y="78" width="130" height="142" rx="10" fill="url(#ag-topo)" stroke="#E8772B" stroke-width="1.8"/>
+        <text x="237" y="104" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-size="14" font-weight="800" fill="#ECE3D4">Topography</text>
+        <line x1="190" y1="113" x2="284" y2="113" stroke="#3a2f23" stroke-width="0.8"/>
+        <text x="237" y="128" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#B3A890">Planning</text>
+        <text x="237" y="141" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#B3A890">position</text>
+        <!-- COMPACT seam badge -->
+        <rect x="191" y="156" width="92" height="16" rx="5" fill="rgba(232,119,43,0.10)" stroke="#9A7F4E" stroke-width="0.8"/>
+        <text x="237" y="167" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#C9A45C">COMPACT seam</text>
+        <!-- three verbs -->
+        <text x="237" y="193" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#85795F">score · active · handoff</text>
+        <text x="237" y="205" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#85795F">coherence score 0.0–1.0</text>
+
+        <!-- Intent box — below Loom -->
+        <rect x="24" y="224" width="100" height="36" rx="8" fill="#211a13" stroke="#9A7F4E" stroke-width="1"/>
+        <text x="74" y="238" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-size="11" font-weight="700" fill="#C9A45C">Intent</text>
+        <text x="74" y="251" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#85795F">governs all engines</text>
+
+        <!-- Consumer box — right -->
+        <rect x="352" y="118" width="100" height="44" rx="9" fill="#211a13" stroke="#7E8A98" stroke-width="1.2"/>
+        <text x="402" y="137" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-size="13" font-weight="700" fill="#AAB4C0">Session</text>
+        <text x="402" y="152" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8.5" fill="#7E8A98">handoff record</text>
+
+        <!-- Loom → Topography arrow (selvedge in) -->
+        <line x1="124" y1="140" x2="170" y2="140" stroke="#7E8A98" stroke-width="1.4" marker-end="url(#aarr-t-steel)"/>
+        <text x="147" y="134" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#9A7F4E" font-style="italic">selvedge</text>
+
+        <!-- Intent ↔ Topography governance dashed -->
+        <line x1="74" y1="208" x2="74" y2="224" stroke="#9A7F4E" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- sibling label -->
+        <path d="M128,242 Q180,258 172,220" fill="none" stroke="#3a2f23" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <text x="152" y="258" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7" fill="#3a2f23" font-style="italic">governs</text>
+
+        <!-- Topography → Session arrow (output) -->
+        <line x1="302" y1="140" x2="350" y2="140" stroke="#E8772B" stroke-width="1.6" marker-end="url(#aarr-t-out)"/>
+        <text x="326" y="134" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="7.5" fill="#9A7F4E" font-style="italic">handoff</text>
+
+        <!-- Intent loop corners — suggesting cycle -->
+        <path d="M460,40 Q470,149 460,258" fill="none" stroke="#3a2f23" stroke-width="1" stroke-dasharray="4,5" marker-end="url(#aarr-t)"/>
+
+        <!-- Bottom label -->
+        <text x="237" y="296" text-anchor="middle" font-family="Spectral,Georgia,serif" font-size="8" fill="#85795F">Loom (awareness) &rarr; Topography (planning) &rarr; Session &nbsp;&nbsp;&middot;&nbsp;&nbsp; COMPACT seam · Intent-governed</text>
+      </svg>
+    </div>
+
+  </div>
+</div></section>
+
 <section id="veil" class="veil-section"><div class="wrap">
   <div class="kicker">Behind the veil</div>
   <h2>How Topography was forged.</h2>
